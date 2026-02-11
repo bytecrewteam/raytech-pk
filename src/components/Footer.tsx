@@ -29,13 +29,13 @@ const Footer = () => {
 
       {/* Links */}
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
           <div>
             <h4 className="font-heading font-semibold text-foreground text-sm mb-4">Shop</h4>
             <ul className="space-y-2">
-              {["Gaming Laptops", "Desktop Components", "Peripherals", "Monitors", "Storage", "All Products"].map((item) => (
+              {["Gaming Laptops", "Desktop Components", "Peripherals", "Monitors"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{item}</a>
+                  <a href="/search" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{item}</a>
                 </li>
               ))}
             </ul>
@@ -43,17 +43,7 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-semibold text-foreground text-sm mb-4">Support</h4>
             <ul className="space-y-2">
-              {["Track Order", "Returns & Refunds", "Shipping Info", "Warranty", "FAQ", "Contact Us"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{item}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-heading font-semibold text-foreground text-sm mb-4">Company</h4>
-            <ul className="space-y-2">
-              {["About Us", "Our Story", "Careers", "Blog", "Student Discount", "Loyalty Program"].map((item) => (
+              {["Shipping Info", "Returns & Refunds", "FAQ"].map((item) => (
                 <li key={item}>
                   <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{item}</a>
                 </li>
@@ -94,11 +84,6 @@ const Footer = () => {
             <span className="text-xs text-muted-foreground">
               © 2025 RayTechPK. All rights reserved.
             </span>
-          </div>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-foreground transition-colors">Refund Policy</a>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted-foreground">We accept:</span>

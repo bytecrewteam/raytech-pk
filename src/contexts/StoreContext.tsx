@@ -1,0 +1,78 @@
+import { createContext, useContext, useState, ReactNode } from "react";
+
+export interface Product {
+  name: string;
+  category: string;
+  price: number;
+  originalPrice?: number;
+  rating: number;
+  reviews: number;
+  badge?: string;
+  badgeType?: "deal" | "new" | "hot";
+  stock: "in-stock" | "low-stock" | "pre-order";
+  image: string;
+}
+
+export interface CartItem extends Product {
+  quantity: number;
+}
+
+interface StoreContextType {
+  cart: CartItem[];
+  wishlist: Product[];
+  addToCart: (product: Product) => void;
+  removeFromCart: (name: string) => void;
+  updateQuantity: (name: string, qty: number) => void;
+  toggleWishlist: (product: Product) => void;
+  isInWishlist: (name: string) => boolean;
+  cartCount: number;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+}
+
+const StoreContext = createContext<StoreContextType | null>(null);
+
+export const useStore = () => {
+  const ctx = useContext(StoreContext);
+  if (!ctx) throw new Error("useStore must be used within StoreProvider");
+  return ctx;
+};
+
+export const StoreProvider = ({ children }: { children: ReactNode }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const addToCart = (product: Product) => {
+    setCart((prev) => {
+      const existing = prev.find((i) => i.name === product.name);
+      if (existing) return prev.map((i) => i.name === product.name ? { ...i, quantity: i.quantity + 1 } : i);
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (name: string) => setCart((prev) => prev.filter((i) => i.name !== name));
+
+  const updateQuantity = (name: string, qty: number) => {
+    if (qty <= 0) return removeFromCart(name);
+    setCart((prev) => prev.map((i) => i.name === name ? { ...i, quantity: qty } : i));
+  };
+
+  const toggleWishlist = (product: Product) => {
+    setWishlist((prev) =>
+      prev.find((i) => i.name === product.name)
+        ? prev.filter((i) => i.name !== product.name)
+        : [...prev, product]
+    );
+  };
+
+  const isInWishlist = (name: string) => wishlist.some((i) => i.name === name);
+
+  const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+
+  return (
+    <StoreContext.Provider value={{ cart, wishlist, addToCart, removeFromCart, updateQuantity, toggleWishlist, isInWishlist, cartCount, searchQuery, setSearchQuery }}>
+      {children}
+    </StoreContext.Provider>
+  );
+};
