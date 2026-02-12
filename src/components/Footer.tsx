@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 const Footer = () => {
@@ -18,6 +19,7 @@ const Footer = () => {
                 type="email"
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-3 rounded-lg bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                maxLength={255}
               />
               <button className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all whitespace-nowrap">
                 Subscribe
@@ -29,25 +31,30 @@ const Footer = () => {
 
       {/* Links */}
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h4 className="font-heading font-semibold text-foreground text-sm mb-4">Shop</h4>
             <ul className="space-y-2">
-              {["Gaming Laptops", "Desktop Components", "Peripherals", "Monitors"].map((item) => (
-                <li key={item}>
-                  <a href="/search" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{item}</a>
-                </li>
-              ))}
+              <li><Link to="/shop/gaming-laptops" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Gaming Laptops</Link></li>
+              <li><Link to="/shop/desktop-components" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Desktop Components</Link></li>
+              <li><Link to="/shop/peripherals" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Peripherals</Link></li>
+              <li><Link to="/shop/monitors" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Monitors</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-heading font-semibold text-foreground text-sm mb-4">Support</h4>
             <ul className="space-y-2">
-              {["Shipping Info", "Returns & Refunds", "FAQ"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{item}</a>
-                </li>
-              ))}
+              <li><Link to="/support/shipping" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Shipping Info</Link></li>
+              <li><Link to="/support/returns" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Returns & Refunds</Link></li>
+              <li><Link to="/support/faq" className="text-xs text-muted-foreground hover:text-foreground transition-colors">FAQ</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-heading font-semibold text-foreground text-sm mb-4">Account</h4>
+            <ul className="space-y-2">
+              <li><Link to="/account" className="text-xs text-muted-foreground hover:text-foreground transition-colors">My Account</Link></li>
+              <li><Link to="/cart" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Shopping Cart</Link></li>
+              <li><Link to="/wishlist" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Wishlist</Link></li>
             </ul>
           </div>
           <div>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useStore } from "@/contexts/StoreContext";
@@ -20,7 +21,7 @@ const DealsPage = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {deals.map((product) => (
-            <div key={product.name} className="group bg-card rounded-xl border border-border hover:border-primary/30 transition-all overflow-hidden">
+            <div key={product.id} className="group bg-card rounded-xl border border-border hover:border-primary/30 transition-all overflow-hidden">
               <div className="relative aspect-square bg-secondary/50 overflow-hidden">
                 {product.badge && (
                   <span className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-destructive text-destructive-foreground">{product.badge}</span>
@@ -28,11 +29,15 @@ const DealsPage = () => {
                 <button onClick={() => toggleWishlist(product)} className="absolute top-2 right-2 z-10 p-1.5 rounded-lg bg-background/60 backdrop-blur-sm text-muted-foreground hover:text-destructive transition-colors">
                   <Heart className={`w-3.5 h-3.5 ${isInWishlist(product.name) ? "fill-current text-destructive" : ""}`} />
                 </button>
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                <Link to={`/product/${product.id}`}>
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                </Link>
               </div>
               <div className="p-4">
                 <p className="text-[10px] uppercase tracking-wider text-primary font-medium mb-1">{product.category}</p>
-                <h3 className="font-heading font-semibold text-foreground text-xs mb-2 line-clamp-2">{product.name}</h3>
+                <Link to={`/product/${product.id}`}>
+                  <h3 className="font-heading font-semibold text-foreground text-xs mb-2 line-clamp-2 hover:text-primary transition-colors">{product.name}</h3>
+                </Link>
                 <div className="flex items-baseline gap-2 mb-3">
                   <span className="font-mono font-bold text-sm text-foreground">{formatPKR(product.price)}</span>
                   {product.originalPrice && <span className="font-mono text-[10px] text-muted-foreground line-through">{formatPKR(product.originalPrice)}</span>}
