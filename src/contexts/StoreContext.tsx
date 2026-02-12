@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export interface Product {
+  id: string;
   name: string;
   category: string;
   price: number;
@@ -11,6 +12,8 @@ export interface Product {
   badgeType?: "deal" | "new" | "hot";
   stock: "in-stock" | "low-stock" | "pre-order";
   image: string;
+  description?: string;
+  specs?: Record<string, string>;
 }
 
 export interface CartItem extends Product {
@@ -38,10 +41,27 @@ export const useStore = () => {
   return ctx;
 };
 
+const loadFromStorage = <T,>(key: string, fallback: T): T => {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch { return fallback; }
+};
+
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => loadFromStorage("raytech_cart", []));
+  const [wishlist, setWishlist] = useState<Product[]>(() => loadFromStorage("raytech_wishlist", []));
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Persist cart
+  useEffect(() => {
+    try { localStorage.setItem("raytech_cart", JSON.stringify(cart)); } catch {}
+  }, [cart]);
+
+  // Persist wishlist
+  useEffect(() => {
+    try { localStorage.setItem("raytech_wishlist", JSON.stringify(wishlist)); } catch {}
+  }, [wishlist]);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {

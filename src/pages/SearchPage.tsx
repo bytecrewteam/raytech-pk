@@ -1,16 +1,17 @@
 import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useStore } from "@/contexts/StoreContext";
 import { allProducts } from "@/data/products";
+import { sanitizeUrlParam } from "@/lib/sanitize";
 import { Search, ShoppingCart, Heart } from "lucide-react";
 
 const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
-  const initialQ = searchParams.get("q") || "";
+  const initialQ = sanitizeUrlParam(searchParams.get("q"));
   const [query, setQuery] = useState(initialQ);
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
 
@@ -30,10 +31,11 @@ const SearchPage = () => {
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value.slice(0, 200))}
               placeholder="Search 800+ products..."
               className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
               autoFocus
+              maxLength={200}
             />
           </div>
           <p className="text-xs text-muted-foreground mt-2">{results.length} product{results.length !== 1 ? "s" : ""} found</p>
@@ -41,16 +43,20 @@ const SearchPage = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {results.map((product) => (
-            <div key={product.name} className="group bg-card rounded-xl border border-border hover:border-primary/30 transition-all overflow-hidden">
+            <div key={product.id} className="group bg-card rounded-xl border border-border hover:border-primary/30 transition-all overflow-hidden">
               <div className="relative aspect-square bg-secondary/50 overflow-hidden">
                 <button onClick={() => toggleWishlist(product)} className="absolute top-2 right-2 z-10 p-1.5 rounded-lg bg-background/60 backdrop-blur-sm text-muted-foreground hover:text-destructive transition-colors">
                   <Heart className={`w-3.5 h-3.5 ${isInWishlist(product.name) ? "fill-current text-destructive" : ""}`} />
                 </button>
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                <Link to={`/product/${product.id}`}>
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                </Link>
               </div>
               <div className="p-4">
                 <p className="text-[10px] uppercase tracking-wider text-primary font-medium mb-1">{product.category}</p>
-                <h3 className="font-heading font-semibold text-foreground text-xs mb-2 line-clamp-2">{product.name}</h3>
+                <Link to={`/product/${product.id}`}>
+                  <h3 className="font-heading font-semibold text-foreground text-xs mb-2 line-clamp-2 hover:text-primary transition-colors">{product.name}</h3>
+                </Link>
                 <div className="flex items-baseline gap-2 mb-3">
                   <span className="font-mono font-bold text-sm text-foreground">{formatPKR(product.price)}</span>
                   {product.originalPrice && <span className="font-mono text-[10px] text-muted-foreground line-through">{formatPKR(product.originalPrice)}</span>}

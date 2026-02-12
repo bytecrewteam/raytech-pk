@@ -2,8 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { StoreProvider } from "@/contexts/StoreContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ReactNode } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CartPage from "./pages/CartPage";
@@ -11,27 +13,61 @@ import WishlistPage from "./pages/WishlistPage";
 import AccountPage from "./pages/AccountPage";
 import DealsPage from "./pages/DealsPage";
 import SearchPage from "./pages/SearchPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import ShopCategoryPage from "./pages/ShopCategoryPage";
+import ShippingPage from "./pages/ShippingPage";
+import ReturnsPage from "./pages/ReturnsPage";
+import FAQPage from "./pages/FAQPage";
 
 const queryClient = new QueryClient();
+
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+};
+
+const PublicRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) return <Navigate to="/" replace />;
+  return <>{children}</>;
+};
+
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+    <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+    <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+    <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+    <Route path="/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+    <Route path="/account" element={<ProtectedRoute><AccountPage /></ProtectedRoute>} />
+    <Route path="/deals" element={<ProtectedRoute><DealsPage /></ProtectedRoute>} />
+    <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+    <Route path="/product/:id" element={<ProtectedRoute><ProductDetailPage /></ProtectedRoute>} />
+    <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+    <Route path="/shop/:category" element={<ProtectedRoute><ShopCategoryPage /></ProtectedRoute>} />
+    <Route path="/support/shipping" element={<ProtectedRoute><ShippingPage /></ProtectedRoute>} />
+    <Route path="/support/returns" element={<ProtectedRoute><ReturnsPage /></ProtectedRoute>} />
+    <Route path="/support/faq" element={<ProtectedRoute><FAQPage /></ProtectedRoute>} />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <StoreProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/wishlist" element={<WishlistPage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/deals" element={<DealsPage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </StoreProvider>
+      <AuthProvider>
+        <StoreProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </StoreProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
