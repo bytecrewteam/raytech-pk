@@ -56,7 +56,7 @@ const CartPage = () => {
                 <div className="flex justify-between text-muted-foreground"><span>Shipping</span><span className="font-mono">{shipping === 0 ? "Free" : formatPKR(shipping)}</span></div>
                 <div className="border-t border-border pt-2 flex justify-between text-foreground font-semibold"><span>Total</span><span className="font-mono">{formatPKR(subtotal + shipping)}</span></div>
               </div>
-              <button onClick={() => navigate("/src/CheckoutPage.tsx")} className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all">Proceed to Checkout</button>
+              <button onClick={() => navigate("/checkout")} className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all">Proceed to Checkout</button>
               {subtotal < 15000 && (
                 <p className="text-xs text-muted-foreground text-center">Add {formatPKR(15000 - subtotal)} more for free shipping!</p>
               )}
