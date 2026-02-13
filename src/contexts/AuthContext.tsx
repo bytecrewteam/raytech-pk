@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
   const [user, setUser] = useState<AuthUser | null>(() => {
     try {
-      const u = localStorage.getItem("raytech_user");
-      return u ? JSON.parse(u) : null;
+      const name = localStorage.getItem("raytech_user_name");
+      return name ? { name, email: "" } : null;
     } catch { return null; }
   });
 
@@ -38,7 +38,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(u);
     try {
       localStorage.setItem("raytech_auth", "true");
-      localStorage.setItem("raytech_user", JSON.stringify(u));
+      // Only store non-sensitive display name; email stays in memory only
+      localStorage.setItem("raytech_user_name", u.name);
     } catch {}
   };
 
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     try {
       localStorage.removeItem("raytech_auth");
-      localStorage.removeItem("raytech_user");
+      localStorage.removeItem("raytech_user_name");
     } catch {}
   };
 
