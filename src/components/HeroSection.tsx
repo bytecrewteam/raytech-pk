@@ -31,7 +31,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
             <a
               href="#featured"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all glow-cyan hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all glow-orange hover:scale-[1.02] active:scale-[0.98]"
             >
               Shop Now <ArrowRight className="w-4 h-4" />
             </a>

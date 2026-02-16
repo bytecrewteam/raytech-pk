@@ -46,6 +46,7 @@ const Navbar = () => {
             </Link>
 
             <nav className="hidden lg:flex items-center gap-6">
+              <Link to="/products" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Products</Link>
               <a href="/#categories" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Categories</a>
               <a href="/#featured" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Featured</a>
               <Link to="/deals" className="text-sm text-primary font-medium">Deals 🔥</Link>
@@ -95,6 +96,7 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-border bg-background animate-fade-in-up">
             <div className="container mx-auto px-4 py-4 space-y-3">
+              <Link to="/products" className="block py-2 text-sm text-muted-foreground hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>Products</Link>
               <a href="/#categories" className="block py-2 text-sm text-muted-foreground hover:text-foreground">Categories</a>
               <a href="/#featured" className="block py-2 text-sm text-muted-foreground hover:text-foreground">Featured</a>
               <Link to="/deals" className="block py-2 text-sm text-primary font-medium" onClick={() => setMobileMenuOpen(false)}>Deals 🔥</Link>
