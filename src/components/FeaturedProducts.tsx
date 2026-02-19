@@ -28,7 +28,7 @@ const FeaturedProducts = () => {
             <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">Featured Products</h2>
             <p className="text-sm text-muted-foreground">Hand-picked, performance-tested hardware at honest prices.</p>
           </div>
-          <Link to="/search" className="hidden md:flex items-center gap-1 text-primary text-sm font-medium hover:underline">View All Products →</Link>
+          <Link to="/products" className="hidden md:flex items-center gap-1 text-primary text-sm font-medium hover:underline">View All Products →</Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -43,7 +43,7 @@ const FeaturedProducts = () => {
 
               <Link to={`/product/${product.id}`}>
                 <div className="aspect-square bg-secondary/50 overflow-hidden">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                 </div>
               </Link>
 
@@ -74,7 +74,7 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="text-center mt-6 md:hidden">
-          <Link to="/search" className="text-primary text-sm font-medium hover:underline">View All Products →</Link>
+          <Link to="/products" className="text-primary text-sm font-medium hover:underline">View All Products →</Link>
         </div>
       </div>
     </section>

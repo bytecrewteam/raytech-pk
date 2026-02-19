@@ -20,10 +20,13 @@ const badgeColors = {
   hot: "bg-destructive text-destructive-foreground",
 };
 
+type SortOption = "featured" | "price-asc" | "price-desc" | "newest";
+
 const AllProductsPage = () => {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sort, setSort] = useState<SortOption>("featured");
 
   const categories = useMemo(() => {
     const cats = Array.from(new Set(allProducts.map((p) => p.category)));
@@ -31,19 +34,41 @@ const AllProductsPage = () => {
   }, []);
 
   const filtered = useMemo(() => {
-    return allProducts.filter((p) => {
+    let result = allProducts.filter((p) => {
       const matchCat = selectedCategory === "All" || p.category === selectedCategory;
       const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchSearch;
     });
-  }, [search, selectedCategory]);
+
+    switch (sort) {
+      case "price-asc": result = [...result].sort((a, b) => a.price - b.price); break;
+      case "price-desc": result = [...result].sort((a, b) => b.price - a.price); break;
+      case "newest": result = [...result].reverse(); break;
+      default: break;
+    }
+    return result;
+  }, [search, selectedCategory, sort]);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 py-10">
-        <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-2">All Products</h1>
-        <p className="text-muted-foreground mb-8">{allProducts.length} products available</p>
+        <div className="flex items-end justify-between mb-2">
+          <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground">All Products</h1>
+        </div>
+        <div className="flex items-center justify-between mb-8">
+          <p className="text-muted-foreground">{filtered.length} products found</p>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortOption)}
+            className="px-3 py-2 rounded-lg bg-secondary border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          >
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="newest">Newest</option>
+          </select>
+        </div>
 
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="relative flex-1">
@@ -78,7 +103,7 @@ const AllProductsPage = () => {
               </button>
               <Link to={`/product/${product.id}`}>
                 <div className="aspect-square bg-secondary/50 overflow-hidden">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                 </div>
               </Link>
               <div className="p-3">

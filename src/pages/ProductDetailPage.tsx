@@ -62,12 +62,12 @@ const ProductDetailPage = () => {
         <div className="grid md:grid-cols-2 gap-8 mb-16">
           <div className="space-y-3">
             <div className="aspect-square rounded-xl bg-secondary/50 overflow-hidden border border-border">
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              <img src={product.image} alt={product.name} className="w-full h-full object-cover" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
             </div>
             <div className="grid grid-cols-4 gap-2">
               {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={`aspect-square rounded-lg bg-secondary/50 overflow-hidden border ${i === 0 ? 'border-primary' : 'border-border'} cursor-pointer`}>
-                  <img src={product.image} alt="" className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+                <div key={i} className={`rounded-lg bg-secondary/50 overflow-hidden border ${i === 0 ? 'border-primary' : 'border-border'} cursor-pointer`} style={{ width: "100%", minHeight: "72px" }}>
+                  <img src={product.image} alt="" className="w-full h-[72px] object-cover opacity-80 hover:opacity-100 transition-opacity" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                 </div>
               ))}
             </div>
@@ -165,7 +165,7 @@ const ProductDetailPage = () => {
               {related.map((p) => (
                 <Link key={p.id} to={`/product/${p.id}`} className="group bg-card rounded-lg border border-border hover:border-primary/30 transition-all overflow-hidden">
                   <div className="aspect-square bg-secondary/50 overflow-hidden">
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                   </div>
                   <div className="p-3">
                     <h3 className="font-heading font-semibold text-foreground text-xs line-clamp-2">{p.name}</h3>

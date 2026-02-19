@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useStore } from "@/contexts/StoreContext";
 import { hasMinLength } from "@/lib/sanitize";
-import { CreditCard, Banknote, Smartphone, Truck } from "lucide-react";
+import { CreditCard, Banknote, Smartphone } from "lucide-react";
 
 const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
 
@@ -18,7 +18,7 @@ const paymentOptions: { id: PaymentMethod; label: string; icon: typeof CreditCar
 ];
 
 const CheckoutPage = () => {
-  const { cart } = useStore();
+  const { cart, clearCart } = useStore();
   const navigate = useNavigate();
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const shipping = subtotal >= 15000 ? 0 : 200;
@@ -29,7 +29,6 @@ const CheckoutPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const update = (field: string, value: string) => {
-    // Input length limits
     const limits: Record<string, number> = { name: 100, email: 255, address: 200, city: 50, postal: 10, cardNumber: 19, expiry: 5, cvc: 4 };
     if (value.length > (limits[field] || 200)) return;
     setForm((p) => ({ ...p, [field]: value })); setErrors({});
@@ -49,8 +48,11 @@ const CheckoutPage = () => {
       if (!hasMinLength(form.cvc, 3)) errs.cvc = "CVC is required";
     }
     if (Object.keys(errs).length) { setErrors(errs); return; }
-    // Dummy - do nothing on submit
-    alert("Order placed successfully! (Demo)");
+    const confirmed = window.confirm("Order placed successfully! (Demo)\n\nClick OK to continue.");
+    if (confirmed) {
+      clearCart();
+      navigate("/");
+    }
   };
 
   if (cart.length === 0) {
@@ -82,7 +84,7 @@ const CheckoutPage = () => {
                 <div className="space-y-3 mb-4">
                   {cart.map((item) => (
                     <div key={item.name} className="flex gap-3 items-center">
-                      <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover" />
+                      <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
                         <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>

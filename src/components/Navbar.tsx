@@ -2,11 +2,13 @@ import { useState } from "react";
 import { ShoppingCart, Search, Menu, X, Heart, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "@/contexts/StoreContext";
+import CartDrawer from "@/components/CartDrawer";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState("");
+  const [cartOpen, setCartOpen] = useState(false);
   const { cartCount } = useStore();
   const navigate = useNavigate();
 
@@ -58,18 +60,18 @@ const Navbar = () => {
               <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
                 <Search className="w-5 h-5" />
               </button>
-              <Link to="/wishlist" className="hidden sm:flex p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+              <Link to="/wishlist" className="hidden sm:flex p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="Wishlist">
                 <Heart className="w-5 h-5" />
               </Link>
               <Link to="/account" className="hidden sm:flex p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
                 <User className="w-5 h-5" />
               </Link>
-              <Link to="/cart" className="relative p-2 rounded-lg bg-secondary hover:bg-primary/20 transition-colors text-foreground">
+              <button onClick={() => setCartOpen(true)} className="relative p-2 rounded-lg bg-secondary hover:bg-primary/20 transition-colors text-foreground">
                 <ShoppingCart className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
                   {cartCount}
                 </span>
-              </Link>
+              </button>
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors text-foreground">
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -114,6 +116,8 @@ const Navbar = () => {
           </div>
         )}
       </header>
+
+      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </>
   );
 };

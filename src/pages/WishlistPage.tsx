@@ -13,13 +13,15 @@ const WishlistPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 py-12 min-h-[60vh]">
-        <h1 className="text-2xl font-heading font-bold text-foreground mb-8">Saved Items</h1>
+        <h1 className="text-2xl font-heading font-bold text-foreground mb-8">Wishlist</h1>
 
         {wishlist.length === 0 ? (
           <div className="text-center py-20">
             <Heart className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground mb-4">No saved items yet</p>
-            <Link to="/" className="inline-flex px-6 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm">Browse Products</Link>
+            <Link to="/products" className="inline-flex px-6 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm">
+              Browse Products
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -27,7 +29,7 @@ const WishlistPage = () => {
               <div key={product.name} className="bg-card rounded-xl border border-border overflow-hidden">
                 <div className="aspect-square bg-secondary/50 overflow-hidden relative">
                   <Link to={`/product/${product.id}`}>
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                   </Link>
                   <button onClick={() => toggleWishlist(product)} className="absolute top-2 right-2 p-2 rounded-lg bg-background/60 backdrop-blur-sm text-destructive">
                     <Heart className="w-4 h-4 fill-current" />
