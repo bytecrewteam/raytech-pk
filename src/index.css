@@ -97,9 +97,16 @@
   100% { transform: rotate(360deg); }
 }
 
+@keyframes gemini-fade-in-out {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  72% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 .gemini-border-animate {
   position: relative;
-  overflow: visible;
+  isolation: isolate;
 }
 
 .gemini-border-animate::before {
@@ -110,22 +117,18 @@
   background: conic-gradient(
     from 0deg,
     hsl(217 91% 60%),
-    hsl(280 100% 70%),
-    hsl(340 82% 52%),
-    hsl(32 100% 46%),
+    hsl(260 100% 72%),
+    hsl(320 82% 62%),
+    hsl(340 90% 55%),
+    hsl(32 100% 50%),
+    hsl(50 100% 55%),
     hsl(217 91% 60%)
   );
-  animation: gemini-rotate 2s linear;
   opacity: 0;
   pointer-events: none;
   z-index: -1;
 }
 
 .gemini-border-animate.active::before {
-  opacity: 1;
-  animation: gemini-rotate 2s linear, fade-out 0.5s ease-out 1.5s forwards;
-}
-
-@keyframes fade-out {
-  to { opacity: 0; }
+  animation: gemini-rotate 0.8s linear infinite, gemini-fade-in-out 2s ease-in-out forwards;
 }
