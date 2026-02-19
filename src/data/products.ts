@@ -186,18 +186,7 @@ export const allProducts: Product[] = [
     description: "LG UltraGear 27GP950 27-inch Nano IPS 4K UHD gaming monitor with 160Hz refresh rate, 1ms response time, HDMI 2.1 for next-gen console gaming, and VESA DisplayHDR 600.",
     specs: { "Resolution": "3840x2160 4K", "Refresh Rate": "160Hz", "Response Time": "1ms GTG", "Panel": "Nano IPS", "HDR": "DisplayHDR 600", "Ports": "2x HDMI 2.1, 1x DP 1.4" },
   },
-  {
-    id: "wd-black-sn850x-1tb",
-    name: "WD Black SN850X 1TB NVMe SSD",
-    category: "Storage",
-    price: 22000,
-    rating: 4.8,
-    reviews: 156,
-    stock: "in-stock",
-    image: "https://images.unsplash.com/photo-1628557044797-f21a177c37ec?w=400&h=400&fit=crop",
-    description: "WD_BLACK SN850X 1TB PCIe Gen 4 NVMe SSD with game mode 2.0 for predictive loading. Sequential reads up to 7,300 MB/s, ideal for gaming and creative professionals.",
-    specs: { "Capacity": "1TB", "Interface": "PCIe Gen 4.0 x4", "Seq. Read": "7,300 MB/s", "Seq. Write": "6,300 MB/s", "Form Factor": "M.2 2280", "Endurance": "600 TBW" },
-  },
+
   {
     id: "nzxt-h7-flow",
     name: "NZXT H7 Flow ATX Mid-Tower Case",

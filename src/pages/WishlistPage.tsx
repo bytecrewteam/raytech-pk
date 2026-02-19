@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useStore } from "@/contexts/StoreContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,6 +9,13 @@ const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
 
 const WishlistPage = () => {
   const { wishlist, toggleWishlist, addToCart } = useStore();
+  const [animatingButton, setAnimatingButton] = useState<string | null>(null);
+
+  const handleAddToCart = (product: typeof wishlist[0]) => {
+    addToCart(product);
+    setAnimatingButton(product.id);
+    setTimeout(() => setAnimatingButton(null), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,7 +49,10 @@ const WishlistPage = () => {
                     <h3 className="font-heading font-semibold text-foreground text-xs mb-2 line-clamp-2 hover:text-primary transition-colors">{product.name}</h3>
                   </Link>
                   <p className="font-mono font-bold text-foreground text-sm mb-3">{formatPKR(product.price)}</p>
-                  <button onClick={() => addToCart(product)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all">
+                  <button 
+                    onClick={() => handleAddToCart(product)} 
+                    className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all gemini-border-animate ${animatingButton === product.id ? 'active' : ''}`}
+                  >
                     <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
                   </button>
                 </div>

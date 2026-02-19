@@ -90,3 +90,42 @@
     box-shadow: 0 0 10px hsl(32 100% 46% / 0.2);
   }
 }
+
+/* Gemini-style animated border for Add to Cart */
+@keyframes gemini-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.gemini-border-animate {
+  position: relative;
+  overflow: visible;
+}
+
+.gemini-border-animate::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 0.625rem;
+  background: conic-gradient(
+    from 0deg,
+    hsl(217 91% 60%),
+    hsl(280 100% 70%),
+    hsl(340 82% 52%),
+    hsl(32 100% 46%),
+    hsl(217 91% 60%)
+  );
+  animation: gemini-rotate 2s linear;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.gemini-border-animate.active::before {
+  opacity: 1;
+  animation: gemini-rotate 2s linear, fade-out 0.5s ease-out 1.5s forwards;
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}

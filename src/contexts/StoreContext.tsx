@@ -20,9 +20,20 @@ export interface CartItem extends Product {
   quantity: number;
 }
 
+export interface Order {
+  id: string;
+  date: string;
+  items: Array<{ name: string; quantity: number; price: number }>;
+  total: number;
+  status: string;
+  shippingAddress: string;
+  paymentMethod: string;
+}
+
 interface StoreContextType {
   cart: CartItem[];
   wishlist: Product[];
+  orders: Order[];
   addToCart: (product: Product) => void;
   removeFromCart: (name: string) => void;
   updateQuantity: (name: string, qty: number) => void;
@@ -32,6 +43,7 @@ interface StoreContextType {
   cartCount: number;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
+  addOrder: (order: Order) => void;
 }
 
 const StoreContext = createContext<StoreContextType | null>(null);
@@ -52,6 +64,7 @@ const loadFromStorage = <T,>(key: string, fallback: T): T => {
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>(() => loadFromStorage("raytech_cart", []));
   const [wishlist, setWishlist] = useState<Product[]>(() => loadFromStorage("raytech_wishlist", []));
+  const [orders, setOrders] = useState<Order[]>(() => loadFromStorage("raytech_orders", []));
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -62,12 +75,20 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     try { localStorage.setItem("raytech_wishlist", JSON.stringify(wishlist)); } catch {}
   }, [wishlist]);
 
+  useEffect(() => {
+    try { localStorage.setItem("raytech_orders", JSON.stringify(orders)); } catch {}
+  }, [orders]);
+
   const addToCart = (product: Product) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.name === product.name);
       if (existing) return prev.map((i) => i.name === product.name ? { ...i, quantity: i.quantity + 1 } : i);
       return [...prev, { ...product, quantity: 1 }];
     });
+
+    // Trigger gemini animation
+    const event = new CustomEvent('gemini-animate');
+    window.dispatchEvent(event);
   };
 
   const removeFromCart = (name: string) => setCart((prev) => prev.filter((i) => i.name !== name));
@@ -91,8 +112,12 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
+  const addOrder = (order: Order) => {
+    setOrders((prev) => [order, ...prev]);
+  };
+
   return (
-    <StoreContext.Provider value={{ cart, wishlist, addToCart, removeFromCart, updateQuantity, clearCart, toggleWishlist, isInWishlist, cartCount, searchQuery, setSearchQuery }}>
+    <StoreContext.Provider value={{ cart, wishlist, orders, addToCart, removeFromCart, updateQuantity, clearCart, toggleWishlist, isInWishlist, cartCount, searchQuery, setSearchQuery, addOrder }}>
       {children}
     </StoreContext.Provider>
   );

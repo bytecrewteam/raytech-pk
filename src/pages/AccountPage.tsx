@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStore } from "@/contexts/StoreContext";
 import { User, Package, MapPin, CreditCard, Bell, LogOut, ChevronRight, ChevronDown } from "lucide-react";
 
 const tabs = [
@@ -53,9 +54,12 @@ const dummyAddresses = [
   { id: 2, label: "Office", name: "Ahmed Khan", address: "Floor 3, Plaza 88, Main Boulevard Gulberg", city: "Lahore", postal: "54660", phone: "+92 321 555-0143" },
 ];
 
+const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
+
 const AccountPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { user, logout } = useAuth();
+  const { orders } = useStore();
   const navigate = useNavigate();
   const [notifs, setNotifs] = useState({ orders: true, deals: true, newsletter: false, sms: false });
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -122,10 +126,21 @@ const AccountPage = () => {
             {activeTab === "orders" && (
               <div className="p-6 rounded-xl bg-card border border-border">
                 <h3 className="font-heading font-semibold text-foreground mb-4">Order History</h3>
+                {orders.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Package className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground text-sm">No orders yet</p>
+                    <button onClick={() => navigate("/")} className="mt-4 px-6 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm">
+                      Start Shopping
+                    </button>
+                  </div>
+                ) : (
                 <div className="space-y-0">
-                  {dummyOrders.map((order) => {
+                  {[...orders, ...dummyOrders].map((order) => {
                     const isOpen = expandedOrder === order.id;
                     const activeStep = statusToStep[order.status] ?? 0;
+                    const isDummyOrder = 'item' in order;
+                    const displayTotal = typeof order.total === 'number' ? formatPKR(order.total) : order.total;
                     return (
                       <div key={order.id} className="border-b border-border last:border-0">
                         <button
@@ -133,12 +148,14 @@ const AccountPage = () => {
                           className="w-full flex items-center justify-between py-4 hover:bg-secondary/30 transition-colors px-2 rounded-lg"
                         >
                           <div className="text-left">
-                            <p className="text-sm font-medium text-foreground">{order.item}</p>
+                            <p className="text-sm font-medium text-foreground">
+                              {isDummyOrder ? order.item : `${order.items.length} item${order.items.length > 1 ? 's' : ''}`}
+                            </p>
                             <p className="text-xs text-muted-foreground">{order.id} • {order.date}</p>
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="text-right">
-                              <p className="font-mono text-sm text-foreground">{order.total}</p>
+                              <p className="font-mono text-sm text-foreground">{displayTotal}</p>
                               <p className={`text-xs ${order.status === "Delivered" ? "text-success" : "text-primary"}`}>{order.status}</p>
                             </div>
                             {isOpen ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
@@ -152,8 +169,12 @@ const AccountPage = () => {
                                 <p className="text-xs text-muted-foreground font-medium mb-2">Items</p>
                                 {order.items.map((it, i) => (
                                   <div key={i} className="flex justify-between text-sm">
-                                    <span className="text-foreground">{it.name} <span className="text-muted-foreground">×{it.qty}</span></span>
-                                    <span className="font-mono text-foreground">{it.price}</span>
+                                    <span className="text-foreground">
+                                      {it.name} <span className="text-muted-foreground">×{isDummyOrder ? it.qty : it.quantity}</span>
+                                    </span>
+                                    <span className="font-mono text-foreground">
+                                      {typeof it.price === 'number' ? formatPKR(it.price * (isDummyOrder ? it.qty : it.quantity)) : it.price}
+                                    </span>
                                   </div>
                                 ))}
                               </div>
@@ -161,11 +182,15 @@ const AccountPage = () => {
                               <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div>
                                   <p className="text-xs text-muted-foreground font-medium mb-1">Shipping Address</p>
-                                  <p className="text-foreground text-xs">{order.address}</p>
+                                  <p className="text-foreground text-xs">
+                                    {isDummyOrder ? order.address : order.shippingAddress}
+                                  </p>
                                 </div>
                                 <div>
                                   <p className="text-xs text-muted-foreground font-medium mb-1">Payment</p>
-                                  <p className="text-foreground text-xs">{order.payment}</p>
+                                  <p className="text-foreground text-xs">
+                                    {isDummyOrder ? order.payment : order.paymentMethod}
+                                  </p>
                                 </div>
                               </div>
                               {/* Timeline */}
@@ -192,6 +217,7 @@ const AccountPage = () => {
                     );
                   })}
                 </div>
+                )}
               </div>
             )}
 
