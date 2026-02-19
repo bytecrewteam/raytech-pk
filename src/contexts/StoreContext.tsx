@@ -26,6 +26,7 @@ interface StoreContextType {
   addToCart: (product: Product) => void;
   removeFromCart: (name: string) => void;
   updateQuantity: (name: string, qty: number) => void;
+  clearCart: () => void;
   toggleWishlist: (product: Product) => void;
   isInWishlist: (name: string) => boolean;
   cartCount: number;
@@ -53,12 +54,10 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [wishlist, setWishlist] = useState<Product[]>(() => loadFromStorage("raytech_wishlist", []));
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Persist cart
   useEffect(() => {
     try { localStorage.setItem("raytech_cart", JSON.stringify(cart)); } catch {}
   }, [cart]);
 
-  // Persist wishlist
   useEffect(() => {
     try { localStorage.setItem("raytech_wishlist", JSON.stringify(wishlist)); } catch {}
   }, [wishlist]);
@@ -78,6 +77,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     setCart((prev) => prev.map((i) => i.name === name ? { ...i, quantity: qty } : i));
   };
 
+  const clearCart = () => setCart([]);
+
   const toggleWishlist = (product: Product) => {
     setWishlist((prev) =>
       prev.find((i) => i.name === product.name)
@@ -91,7 +92,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <StoreContext.Provider value={{ cart, wishlist, addToCart, removeFromCart, updateQuantity, toggleWishlist, isInWishlist, cartCount, searchQuery, setSearchQuery }}>
+    <StoreContext.Provider value={{ cart, wishlist, addToCart, removeFromCart, updateQuantity, clearCart, toggleWishlist, isInWishlist, cartCount, searchQuery, setSearchQuery }}>
       {children}
     </StoreContext.Provider>
   );
