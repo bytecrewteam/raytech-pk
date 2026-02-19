@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -24,9 +25,16 @@ const categoryMap: Record<string, string> = {
 const ShopCategoryPage = () => {
   const { category } = useParams<{ category: string }>();
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
+  const [animatingButton, setAnimatingButton] = useState<string | null>(null);
 
   const categoryName = categoryMap[category || ""] || category || "Products";
   const products = getProductsByCategory(categoryName);
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addToCart(product);
+    setAnimatingButton(product.id);
+    setTimeout(() => setAnimatingButton(null), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -63,7 +71,10 @@ const ShopCategoryPage = () => {
                     <span className="font-mono font-bold text-sm text-foreground">{formatPKR(product.price)}</span>
                     {product.originalPrice && <span className="font-mono text-[10px] text-muted-foreground line-through">{formatPKR(product.originalPrice)}</span>}
                   </div>
-                  <button onClick={() => addToCart(product)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all">
+                  <button 
+                    onClick={() => handleAddToCart(product)} 
+                    className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all gemini-border-animate ${animatingButton === product.id ? 'active' : ''}`}
+                  >
                     <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
                   </button>
                 </div>

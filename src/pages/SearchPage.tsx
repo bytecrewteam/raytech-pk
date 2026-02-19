@@ -14,6 +14,13 @@ const SearchPage = () => {
   const initialQ = sanitizeUrlParam(searchParams.get("q"));
   const [query, setQuery] = useState(initialQ);
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
+  const [animatingButton, setAnimatingButton] = useState<string | null>(null);
+
+  const handleAddToCart = (product: typeof allProducts[0]) => {
+    addToCart(product);
+    setAnimatingButton(product.id);
+    setTimeout(() => setAnimatingButton(null), 2000);
+  };
 
   const results = useMemo(() => {
     if (!query.trim()) return allProducts;
@@ -61,7 +68,10 @@ const SearchPage = () => {
                   <span className="font-mono font-bold text-sm text-foreground">{formatPKR(product.price)}</span>
                   {product.originalPrice && <span className="font-mono text-[10px] text-muted-foreground line-through">{formatPKR(product.originalPrice)}</span>}
                 </div>
-                <button onClick={() => addToCart(product)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all">
+                <button 
+                  onClick={() => handleAddToCart(product)} 
+                  className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all gemini-border-animate ${animatingButton === product.id ? 'active' : ''}`}
+                >
                   <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
                 </button>
               </div>

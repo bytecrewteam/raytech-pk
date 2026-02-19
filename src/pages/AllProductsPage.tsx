@@ -27,6 +27,13 @@ const AllProductsPage = () => {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sort, setSort] = useState<SortOption>("featured");
+  const [animatingButton, setAnimatingButton] = useState<string | null>(null);
+
+  const handleAddToCart = (product: typeof allProducts[0]) => {
+    addToCart(product);
+    setAnimatingButton(product.id);
+    setTimeout(() => setAnimatingButton(null), 2000);
+  };
 
   const categories = useMemo(() => {
     const cats = Array.from(new Set(allProducts.map((p) => p.category)));
@@ -124,7 +131,10 @@ const AllProductsPage = () => {
                   {product.originalPrice && <span className="font-mono text-[10px] text-muted-foreground line-through">{formatPKR(product.originalPrice)}</span>}
                 </div>
                 <p className={`text-[10px] font-medium mb-2.5 ${stockConfig[product.stock].className}`}>● {stockConfig[product.stock].label}</p>
-                <button onClick={() => addToCart(product)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all active:scale-[0.98]">
+                <button 
+                  onClick={() => handleAddToCart(product)} 
+                  className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all active:scale-[0.98] gemini-border-animate ${animatingButton === product.id ? 'active' : ''}`}
+                >
                   <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
                 </button>
               </div>

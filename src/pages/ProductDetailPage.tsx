@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useStore } from "@/contexts/StoreContext";
@@ -29,6 +30,15 @@ const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id || "");
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 2000);
+    }
+  };
 
   if (!product) {
     return (
@@ -108,7 +118,10 @@ const ProductDetailPage = () => {
             )}
 
             <div className="flex gap-3 mb-6">
-              <button onClick={() => addToCart(product)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all">
+              <button 
+                onClick={handleAddToCart} 
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm hover:brightness-110 transition-all gemini-border-animate ${isAnimating ? 'active' : ''}`}
+              >
                 <ShoppingCart className="w-4 h-4" /> Add to Cart
               </button>
               <button onClick={() => toggleWishlist(product)} className={`p-3 rounded-lg border ${isInWishlist(product.name) ? 'border-destructive text-destructive' : 'border-border text-muted-foreground hover:text-destructive'} transition-colors`}>

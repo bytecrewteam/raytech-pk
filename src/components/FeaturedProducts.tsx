@@ -2,6 +2,7 @@ import { Star, ShoppingCart, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useStore } from "@/contexts/StoreContext";
 import { allProducts } from "@/data/products";
+import { useEffect, useRef, useState } from "react";
 
 const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
 
@@ -19,6 +20,21 @@ const badgeColors = {
 
 const FeaturedProducts = () => {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
+  const [animatingButton, setAnimatingButton] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleGemini = () => {
+      // Animation is handled per-button on click
+    };
+    window.addEventListener('gemini-animate', handleGemini);
+    return () => window.removeEventListener('gemini-animate', handleGemini);
+  }, []);
+
+  const handleAddToCart = (product: typeof allProducts[0]) => {
+    addToCart(product);
+    setAnimatingButton(product.id);
+    setTimeout(() => setAnimatingButton(null), 2000);
+  };
 
   return (
     <section id="featured" className="py-16 bg-card/50">
@@ -65,7 +81,10 @@ const FeaturedProducts = () => {
                   {product.originalPrice && <span className="font-mono text-[10px] text-muted-foreground line-through">{formatPKR(product.originalPrice)}</span>}
                 </div>
                 <p className={`text-[10px] font-medium mb-2.5 ${stockConfig[product.stock].className}`}>● {stockConfig[product.stock].label}</p>
-                <button onClick={() => addToCart(product)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all active:scale-[0.98]">
+                <button 
+                  onClick={() => handleAddToCart(product)} 
+                  className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-xs hover:brightness-110 transition-all active:scale-[0.98] gemini-border-animate ${animatingButton === product.id ? 'active' : ''}`}
+                >
                   <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
                 </button>
               </div>

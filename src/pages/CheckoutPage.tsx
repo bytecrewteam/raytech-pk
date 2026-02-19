@@ -18,7 +18,7 @@ const paymentOptions: { id: PaymentMethod; label: string; icon: typeof CreditCar
 ];
 
 const CheckoutPage = () => {
-  const { cart, clearCart } = useStore();
+  const { cart, clearCart, addOrder } = useStore();
   const navigate = useNavigate();
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const shipping = subtotal >= 15000 ? 0 : 200;
@@ -48,10 +48,38 @@ const CheckoutPage = () => {
       if (!hasMinLength(form.cvc, 3)) errs.cvc = "CVC is required";
     }
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    
+    // Generate order ID
+    const orderId = `RT-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}${String(Date.now()).slice(-4)}`;
+    
+    // Create order object
+    const order = {
+      id: orderId,
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      items: cart.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      total: total,
+      status: "Order Placed",
+      shippingAddress: `${form.address}, ${form.city}, ${form.postal}`,
+      paymentMethod: payment === "card" 
+        ? `Card •••• ${form.cardNumber.slice(-4)}`
+        : payment === "jazzcash"
+        ? "JazzCash"
+        : payment === "easypaisa"
+        ? "EasyPaisa"
+        : "Cash on Delivery",
+    };
+    
+    // Save order
+    addOrder(order);
+    
     const confirmed = window.confirm("Order placed successfully! (Demo)\n\nClick OK to continue.");
     if (confirmed) {
       clearCart();
-      navigate("/");
+      navigate("/account");
     }
   };
 
