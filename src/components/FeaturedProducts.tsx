@@ -2,21 +2,8 @@ import { Star, ShoppingCart, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useStore } from "@/contexts/StoreContext";
 import { allProducts } from "@/data/products";
-import { useEffect, useRef, useState } from "react";
-
-const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
-
-const stockConfig = {
-  "in-stock": { label: "In Stock", className: "text-success" },
-  "low-stock": { label: "Only 3 Left!", className: "text-destructive" },
-  "pre-order": { label: "Pre-Order", className: "text-primary" },
-};
-
-const badgeColors = {
-  deal: "bg-destructive text-destructive-foreground",
-  new: "bg-primary text-primary-foreground",
-  hot: "bg-destructive text-destructive-foreground",
-};
+import { useEffect, useState } from "react";
+import { formatPKR, stockConfig, badgeColors, ANIMATION_DURATION_MS } from "@/lib/format";
 
 const FeaturedProducts = () => {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
@@ -33,7 +20,7 @@ const FeaturedProducts = () => {
   const handleAddToCart = (product: typeof allProducts[0]) => {
     addToCart(product);
     setAnimatingButton(product.id);
-    setTimeout(() => setAnimatingButton(null), 2000);
+    setTimeout(() => setAnimatingButton(null), ANIMATION_DURATION_MS);
   };
 
   return (

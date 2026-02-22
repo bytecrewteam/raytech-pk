@@ -86,7 +86,7 @@ const Navbar = () => {
                   type="text"
                   value={searchVal}
                   onChange={(e) => setSearchVal(e.target.value)}
-                  placeholder="Search 800+ products... (e.g., RTX 4070, mechanical keyboard)"
+                  placeholder="Search 200+ products... (e.g., RTX 4070, mechanical keyboard)"
                   className="w-full pl-10 pr-4 py-3 rounded-lg bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                   autoFocus
                 />

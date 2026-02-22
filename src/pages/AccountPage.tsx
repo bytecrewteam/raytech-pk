@@ -92,14 +92,17 @@ const dummyAddresses = [
 const AccountPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { user, logout } = useAuth();
-  const { orders } = useStore();
+  const { orders, clearCart } = useStore();
   const navigate = useNavigate();
   const [notifs, setNotifs] = useState({ orders: true, deals: true, newsletter: false, sms: false });
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const handleLogout = () => {
-    logout();
-    navigate("/login");
+    logout(() => {
+      // Clear cart on logout and redirect to home
+      clearCart();
+      navigate("/");
+    });
   };
 
   const toggleOrder = (id: string) => {

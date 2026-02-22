@@ -15,7 +15,7 @@ const HeroSection = () => {
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-6 animate-fade-in-up">
             <Zap className="w-3 h-3" />
-            800+ Genuine Products • Trusted Since 2019
+            200+ Genuine Products • Trusted Since 2019
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 leading-[1.1] animate-fade-in-up" style={{ animationDelay: "0.1s" }}>

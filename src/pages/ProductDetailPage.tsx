@@ -74,10 +74,14 @@ const ProductDetailPage = () => {
             <div className="aspect-square rounded-xl bg-secondary/50 overflow-hidden border border-border">
               <img src={product.image} alt={product.name} className="w-full h-full object-cover" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
             </div>
+            {/* Thumbnail gallery - placeholder for when products have multiple images */}
             <div className="grid grid-cols-4 gap-2">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={`rounded-lg bg-secondary/50 overflow-hidden border ${i === 0 ? 'border-primary' : 'border-border'} cursor-pointer`} style={{ width: "100%", minHeight: "72px" }}>
-                  <img src={product.image} alt="" className="w-full h-[72px] object-cover opacity-80 hover:opacity-100 transition-opacity" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
+              <div className="rounded-lg bg-secondary/50 overflow-hidden border border-primary cursor-pointer" style={{ width: "100%", minHeight: "72px" }}>
+                <img src={product.image} alt="View larger" className="w-full h-[72px] object-cover opacity-100" decoding="async" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
+              </div>
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-lg bg-secondary/30 overflow-hidden border border-border cursor-not-allowed opacity-50" style={{ width: "100%", minHeight: "72px" }}>
+                  <div className="w-full h-[72px] flex items-center justify-center text-muted-foreground text-xs">Coming soon</div>
                 </div>
               ))}
             </div>

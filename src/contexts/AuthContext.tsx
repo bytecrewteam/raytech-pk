@@ -9,7 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: AuthUser | null;
   login: (user: AuthUser) => void;
-  logout: () => void;
+  logout: (onLogout?: () => void) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -43,13 +43,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch {}
   };
 
-  const logout = () => {
+  const logout = (onLogout?: () => void) => {
     setIsAuthenticated(false);
     setUser(null);
     try {
       localStorage.removeItem("raytech_auth");
       localStorage.removeItem("raytech_user_name");
     } catch {}
+    // Call optional callback (e.g., to clear cart, redirect)
+    if (onLogout) onLogout();
   };
 
   return (

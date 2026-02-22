@@ -42,21 +42,26 @@ const AppRoutes = () => (
   <>
     <ScrollToTop />
     <Routes>
+      {/* Public Routes - accessible without login */}
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
-      <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-      <Route path="/products" element={<ProtectedRoute><AllProductsPage /></ProtectedRoute>} />
+      <Route path="/" element={<Index />} />
+      <Route path="/products" element={<AllProductsPage />} />
+      <Route path="/deals" element={<DealsPage />} />
+      <Route path="/search" element={<SearchPage />} />
+      <Route path="/product/:id" element={<ProductDetailPage />} />
+      <Route path="/shop/:category" element={<ShopCategoryPage />} />
+      <Route path="/support/shipping" element={<ShippingPage />} />
+      <Route path="/support/returns" element={<ReturnsPage />} />
+      <Route path="/support/faq" element={<FAQPage />} />
+      
+      {/* Protected Routes - require login */}
       <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
       <Route path="/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
       <Route path="/account" element={<ProtectedRoute><AccountPage /></ProtectedRoute>} />
-      <Route path="/deals" element={<ProtectedRoute><DealsPage /></ProtectedRoute>} />
-      <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
-      <Route path="/product/:id" element={<ProtectedRoute><ProductDetailPage /></ProtectedRoute>} />
       <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
-      <Route path="/shop/:category" element={<ProtectedRoute><ShopCategoryPage /></ProtectedRoute>} />
-      <Route path="/support/shipping" element={<ProtectedRoute><ShippingPage /></ProtectedRoute>} />
-      <Route path="/support/returns" element={<ProtectedRoute><ReturnsPage /></ProtectedRoute>} />
-      <Route path="/support/faq" element={<ProtectedRoute><FAQPage /></ProtectedRoute>} />
+      
+      {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   </>

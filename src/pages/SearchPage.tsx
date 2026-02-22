@@ -5,9 +5,8 @@ import Footer from "@/components/Footer";
 import { useStore } from "@/contexts/StoreContext";
 import { allProducts } from "@/data/products";
 import { sanitizeUrlParam } from "@/lib/sanitize";
+import { formatPKR, ANIMATION_DURATION_MS, MAX_SEARCH_LENGTH } from "@/lib/format";
 import { Search, ShoppingCart, Heart } from "lucide-react";
-
-const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -19,7 +18,7 @@ const SearchPage = () => {
   const handleAddToCart = (product: typeof allProducts[0]) => {
     addToCart(product);
     setAnimatingButton(product.id);
-    setTimeout(() => setAnimatingButton(null), 2000);
+    setTimeout(() => setAnimatingButton(null), ANIMATION_DURATION_MS);
   };
 
   const results = useMemo(() => {
@@ -38,11 +37,11 @@ const SearchPage = () => {
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value.slice(0, 200))}
-              placeholder="Search 800+ products..."
+              onChange={(e) => setQuery(e.target.value.slice(0, MAX_SEARCH_LENGTH))}
+              placeholder="Search 200+ products..."
               className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
               autoFocus
-              maxLength={200}
+              maxLength={MAX_SEARCH_LENGTH}
             />
           </div>
           <p className="text-xs text-muted-foreground mt-2">{results.length} product{results.length !== 1 ? "s" : ""} found</p>
